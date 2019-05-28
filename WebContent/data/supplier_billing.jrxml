@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09d5e869-5f3e-4215-b487-5df4eb02ee69">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="sup_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["%"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["00000000"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["99999999"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="invoice_type" class="java.lang.String">
+		<defaultValueExpression><![CDATA["%"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT '1' AS ITEM, ROW_NUMBER() OVER (ORDER BY BUY_PRODUCT.INVOICE_DATE, BUY_PRODUCT.INVOICE_NO) AS ROW, SUPPLIER.SUP_NAME, BUY_PRODUCT.TEMP_INVOICE_NO, BUY_PRODUCT.INVOICE_NO, BUY_PRODUCT.INVOICE_DATE, COUNT(*) AS ITEM_AMOUNT, SUM(BUY_PRODUCT.TOTAL_NET_AMOUNT) AS TOTAL_NET_AMOUNT FROM BUY_PRODUCT LEFT OUTER JOIN SUPPLIER ON BUY_PRODUCT.SUP_ID = SUPPLIER.SUP_ID WHERE BUY_PRODUCT.SUP_ID LIKE $P{sup_id} AND BUY_PRODUCT.INVOICE_DATE BETWEEN $P{start_date} AND $P{end_date}
+GROUP BY SUPPLIER.SUP_NAME, BUY_PRODUCT.TEMP_INVOICE_NO, BUY_PRODUCT.INVOICE_NO, BUY_PRODUCT.INVOICE_DATE
+ORDER BY SUPPLIER.SUP_NAME, BUY_PRODUCT.INVOICE_DATE, BUY_PRODUCT.INVOICE_NO]]>
+	</queryString>
+	<field name="ITEM" class="java.lang.String"/>
+	<field name="ROW" class="java.lang.Long"/>
+	<field name="SUP_NAME" class="java.lang.String"/>
+	<field name="TEMP_INVOICE_NO" class="java.lang.String"/>
+	<field name="INVOICE_NO" class="java.lang.String"/>
+	<field name="INVOICE_DATE" class="java.lang.String"/>
+	<field name="ITEM_AMOUNT" class="java.lang.Integer"/>
+	<field name="TOTAL_NET_AMOUNT" class="java.math.BigDecimal"/>
+	<variable name="ITEM_1" class="java.lang.Integer" resetType="Group" resetGroup="customer" calculation="Count">
+		<variableExpression><![CDATA[$F{ITEM}]]></variableExpression>
+	</variable>
+	<variable name="ITEM_AMOUNT_1" class="java.lang.Integer" resetType="Group" resetGroup="customer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ITEM_AMOUNT}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_NET_AMOUNT_1" class="java.math.BigDecimal" resetType="Group" resetGroup="customer" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL_NET_AMOUNT}]]></variableExpression>
+	</variable>
+	<group name="customer">
+		<groupExpression><![CDATA[$F{SUP_NAME}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement x="44" y="7" width="411" height="20" uuid="01596fd7-5553-4f86-881f-788d9180752b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SUP_NAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="7" width="44" height="20" uuid="a6025ae8-8187-455e-a312-bdb643f88383"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ชื่อลูกค้า]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="2" width="555" height="1" uuid="fa3f4833-b1b4-4f74-ac04-825618626c22"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28">
+				<textField>
+					<reportElement x="65" y="5" width="54" height="20" uuid="622a1867-af64-4fc9-b066-fbc22956d7b1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{ITEM_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="455" y="5" width="100" height="20" uuid="fe226698-f20d-40ef-896a-9d5260279e87"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_NET_AMOUNT_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="5" width="65" height="20" uuid="c07d3e38-2d5f-4260-9f86-48a931850920"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[รวมจำนวนบิล]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="330" y="5" width="125" height="20" uuid="4e5c18a7-db23-4d93-a68a-97d6bfdc2495"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[เป็นเงินทั้งสิ้น]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="130" y="5" width="65" height="20" uuid="1af0803a-ab03-4a0d-bc68-fa836ed57739"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ใบ]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="2" width="555" height="1" uuid="2b46a360-722e-4823-9fa8-ac1b7c060890"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="277" height="30" uuid="bfefe346-949f-482f-92f3-2fe4a3f37d2c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="24" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[รายงานรายการวางบิลซื้อ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="16" uuid="8937c7a5-f15e-4d5c-b7eb-3e6303826aeb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[TEMP_INVOICE_NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="100" height="16" uuid="f9bc055d-7abe-4bf2-a5b8-d8511369f0e4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[เลขที่ใบแจ้งหนี้]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="0" width="100" height="16" uuid="a82debfe-6b07-4c80-9f90-7a0a9df5c69f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[วันที่ขายสินค้า]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="100" height="16" uuid="b5df2c48-0451-43fa-a1bb-69abbd201be9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[จำนวนรายการ/บิล]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="16" uuid="7a6ccb39-47d0-42fe-976e-4663c17a363d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[จำนวนเงินรวม]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="130" height="15" uuid="e2b45181-6d23-451d-9d83-afe241ad7745"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="13" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TEMP_INVOICE_NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="100" height="15" uuid="440b466c-f6f8-47b5-a429-4dd870c44b0f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="13" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INVOICE_NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="100" height="15" uuid="8ea80f6f-c8c1-4c37-bf38-ff135a531e80"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="13" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INVOICE_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="100" height="15" uuid="2ea989d4-6ab2-4504-b81b-976bafdb8933"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="13" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ITEM_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="455" y="0" width="100" height="15" uuid="5e9e9ce1-63ac-4f8e-b689-0a3548fda4b0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="13" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_NET_AMOUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

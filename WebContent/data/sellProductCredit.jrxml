@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sellProductCredit" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="603" leftMargin="9" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e8d7b03d-cefc-4172-a7b0-d2a6aeba10c7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="temp_invoice_no" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["%"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CUST.CUST_NAME, CUST.ADDRESS1, CUST.ADDRESS2, USR.NAME, PRD.PRD_NAME, PRD.PRD_SIZE,
+VM.VEHICLE_MODEL_NAME, PB.PRD_BRAND_NAME, U.UNIT_NAME,
+CASE WHEN SELL.DISCOUNT_RATE = 0 AND SELL.DISCOUNT_AMOUNT = 0 THEN '' ELSE
+CASE WHEN CONVERT(varchar(10), SELL.DISCOUNT_RATE) = '0' THEN '' ELSE CONVERT(varchar(10), SELL.DISCOUNT_RATE)+'%' END+
+CASE WHEN CONVERT(varchar(10), SELL.EXTRA_DISCOUNT_RATE) = '0' THEN '' ELSE ':'+CONVERT(varchar(10), SELL.EXTRA_DISCOUNT_RATE)+'%' END END+
+CASE WHEN CONVERT(varchar(10), SELL.DISCOUNT_AMOUNT) = '0' THEN '' ELSE CONVERT(varchar(10), SELL.DISCOUNT_AMOUNT)+'.- ' END+
+CASE WHEN CONVERT(varchar(10), SELL.EXTRA_DISCOUNT_AMOUNT) = '0' THEN '' ELSE ':'+CONVERT(varchar(10), SELL.EXTRA_DISCOUNT_AMOUNT)+'' END AS DISCOUNT,
+(SELL.TOTAL_NET_AMOUNT - SELL.TAX_AMOUNT)/SELL.QUANTITY AS NET_AMOUNT, CUST.TELEPHONE,
+SELL.*, AE.AREA_ID+':'+AE.ROUTE_NAME AS AREA
+FROM SELL_PRODUCT AS SELL
+LEFT OUTER JOIN CUSTOMER AS CUST ON SELL.CUST_ID = CUST.CUST_ID
+LEFT OUTER JOIN PRODUCT PRD ON SELL.PART_NO = PRD.PART_NO
+LEFT OUTER JOIN USERS USR ON USR.USER_ID = CUST.EMP_ID
+LEFT OUTER JOIN VEHICLE_MODEL VM ON PRD.VEHICLE_MODEL_ID = VM.VEHICLE_MODEL_ID
+LEFT OUTER JOIN PRODUCT_BRAND PB ON PRD.PRD_BRAND_ID = PB.PRD_BRAND_ID
+LEFT OUTER JOIN UNIT U ON PRD.UNIT_ID = U.UNIT_ID
+LEFT OUTER JOIN AREA AE ON CUST.AREA_ID = AE.AREA_ID
+WHERE SELL.TEMP_INVOICE_NO LIKE $P{temp_invoice_no}
+ORDER BY SELL.TEMP_INVOICE_NO, SELL.ITEM_NO]]>
+	</queryString>
+	<field name="CUST_NAME" class="java.lang.String"/>
+	<field name="ADDRESS1" class="java.lang.String"/>
+	<field name="ADDRESS2" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="PRD_NAME" class="java.lang.String"/>
+	<field name="PRD_SIZE" class="java.lang.String"/>
+	<field name="VEHICLE_MODEL_NAME" class="java.lang.String"/>
+	<field name="PRD_BRAND_NAME" class="java.lang.String"/>
+	<field name="UNIT_NAME" class="java.lang.String"/>
+	<field name="DISCOUNT" class="java.lang.String"/>
+	<field name="NET_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TELEPHONE" class="java.lang.String"/>
+	<field name="BUSINESS_ID" class="java.lang.String"/>
+	<field name="TEMP_INVOICE_NO" class="java.lang.String"/>
+	<field name="TEMP_INVOICE_DATE" class="java.lang.String"/>
+	<field name="INVOICE_NO" class="java.lang.String"/>
+	<field name="INVOICE_DATE" class="java.lang.String"/>
+	<field name="PAYMENT_TERM" class="java.math.BigDecimal"/>
+	<field name="PAYMENT_DATE" class="java.lang.String"/>
+	<field name="CUST_ID" class="java.lang.String"/>
+	<field name="EMP_ID" class="java.lang.String"/>
+	<field name="LAST_SELL_DATE" class="java.lang.String"/>
+	<field name="LAST_SELL_PRICE" class="java.math.BigDecimal"/>
+	<field name="ITEM_NO" class="java.math.BigDecimal"/>
+	<field name="PART_NO" class="java.lang.String"/>
+	<field name="AMOUNT" class="java.math.BigDecimal"/>
+	<field name="QUANTITY" class="java.math.BigDecimal"/>
+	<field name="TOTAL_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="DISCOUNT_RATE" class="java.math.BigDecimal"/>
+	<field name="DISCOUNT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EXTRA_DISCOUNT_RATE" class="java.math.BigDecimal"/>
+	<field name="EXTRA_DISCOUNT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TAX_RATE" class="java.math.BigDecimal"/>
+	<field name="TAX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_NET_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="NOTE" class="java.lang.String"/>
+	<field name="OLD_COST" class="java.math.BigDecimal"/>
+	<field name="ACTIVE" class="java.lang.String"/>
+	<field name="CREATE_DATE" class="java.lang.String"/>
+	<field name="CREATE_TIME" class="java.lang.String"/>
+	<field name="CREATE_USER_ID" class="java.lang.String"/>
+	<field name="UPDATE_DATE" class="java.lang.String"/>
+	<field name="UPDATE_TIME" class="java.lang.String"/>
+	<field name="UPDATE_USER_ID" class="java.lang.String"/>
+	<field name="TOTAL_BILL_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_TAX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_DISCOUNT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_EXTRA_DISCOUNT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="INVOICE_TYPE" class="java.lang.String"/>
+	<field name="THAI_BAHT" class="java.lang.String"/>
+	<field name="PRINTED_DATE" class="java.lang.String"/>
+	<field name="AREA" class="java.lang.String"/>
+	<group name="tempInvoiceNo" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{TEMP_INVOICE_NO}]]></groupExpression>
+		<groupHeader>
+			<band height="126" splitType="Stretch">
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="0" y="58" width="230" height="20" uuid="622fc5bf-3425-40ec-81e8-12811248bfc6"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CUST_NAME}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="0" y="72" width="230" height="20" uuid="3c8e4f34-6fde-4e78-be54-76c39cd85977"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ADDRESS1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="0" y="85" width="230" height="20" uuid="3f7c9205-3409-4564-9da0-150b7d5e6bd5"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ADDRESS2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="375" y="55" width="100" height="20" uuid="8990467d-f362-439f-b2bb-5ef17652ec05"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PAYMENT_DATE}.length()< 8 ? "" :
+$F{PAYMENT_DATE}.substring( 6, 8 )+"/"+$F{PAYMENT_DATE}.substring( 4, 6 )+"/"+$F{PAYMENT_DATE}.substring( 0, 4 )]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="487" y="84" width="100" height="20" uuid="40c79160-7372-417c-8470-fab4df9da6e7"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{EMP_ID}+"   "+$F{NAME}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="375" y="83" width="108" height="20" uuid="73b78f5f-532b-413c-97cc-a023e7d1d4f6"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CUST_ID}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="238" y="55" width="58" height="20" uuid="d927f385-6c49-4990-8f22-b36804ab6ed7"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{INVOICE_DATE}.length()<8 ? "" :
+$F{INVOICE_DATE}.substring( 6, 8 )+"/"+$F{INVOICE_DATE}.substring( 4, 6 )+"/"+$F{INVOICE_DATE}.substring( 0, 4 )]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="475" y="-43" width="100" height="20" uuid="856c3eac-e794-4c1a-95ce-d9e5ea9a8fce"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TEMP_INVOICE_NO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="105" y="46" width="125" height="20" uuid="cdec9af0-be52-47a1-8754-26dab51e57d2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TELEPHONE}]]></textFieldExpression>
+				</textField>
+				<textField pattern="HH.mm">
+					<reportElement x="310" y="55" width="38" height="20" uuid="13f89ae9-26c6-4438-a9de-e3ce99b95683"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="487" y="55" width="100" height="20" uuid="42b4d58a-1b0f-4455-a740-c2efaa330e96"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TEMP_INVOICE_NO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="375" y="26" width="100" height="20" uuid="b54f16f4-45f9-48ae-b9b8-f4fc7fed4ca8"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{AREA}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="25" height="19" uuid="de73b45e-f9b4-4de6-bb8c-5078311be1ce"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ITEM_NO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="25" y="0" width="92" height="19" uuid="f51591b0-da3c-4f12-8a14-e6963ba0b56b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PART_NO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="119" y="0" width="162" height="19" uuid="2ef505bc-c3f6-4a55-8831-46cb603ad174"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRD_NAME}+", "+$F{VEHICLE_MODEL_NAME}+", "+$F{PRD_SIZE}+" / "+$F{PRD_BRAND_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="450" y="0" width="55" height="19" uuid="a5b24094-ba6d-4654-bce5-1bb92fa71acc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NET_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement key="textField" x="319" y="0" width="32" height="19" uuid="b86f4da8-92c1-44bb-8cbc-c7158650b372"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="355" y="0" width="50" height="19" uuid="35b01bcf-67c8-45a6-be1c-ef72ac20a64f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="517" y="0" width="55" height="19" uuid="97ee20b4-2ec8-4959-a18d-f3c031e5c05d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_NET_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="405" y="0" width="45" height="19" uuid="568b0b4d-e20b-447b-8ec9-c1dd556d6ff2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DISCOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="281" y="0" width="27" height="19" uuid="baf79543-4b2f-466a-adbe-8d1367fa0d0f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNIT_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="116" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="517" y="26" width="55" height="18" uuid="12f37452-6d40-4a84-8889-52b1d431639c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15" isBold="true" pdfFontName="THSarabun Bold.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_BILL_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="517" y="4" width="55" height="18" uuid="f255cd02-d118-4aa4-bb46-e5684acc59d8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="15" isBold="true" pdfFontName="THSarabun Bold.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_BILL_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="12" y="26" width="336" height="18" uuid="9e9631b7-52f9-4924-b855-a1d3a07308aa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{THAI_BAHT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

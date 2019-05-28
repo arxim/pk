@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Billing" pageWidth="576" pageHeight="360" orientation="Landscape" columnWidth="556" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" uuid="f53ec155-5a6c-4160-8abf-9dd76751e613">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="114"/>
+	<scriptlet name="scriptlet2" class="df.bean.obj.util.ThaiText"/>
+	<parameter name="cust_id" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["00090"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emp_id" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["%"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[20160301]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[99999999]]></defaultValueExpression>
+	</parameter>
+	<parameter name="invoice_type" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["%"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="note" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["หมายเหตุ"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CONVERT(VARCHAR(2),PMONTH)+'/'+SUBSTRING(CONVERT(VARCHAR(4),PYEAR),3,2) AS TERM ,CUST_ID, CUST_NAME, ADDRESS1, ADDRESS2,
+COUNT(*) COUNT_BILL, CONVERT(VARCHAR(50),SUM(TOTAL_BILL_AMOUNT)) AS MONEY,
+SUM(TOTAL_BILL_AMOUNT) AS TOTAL_AMOUNT
+FROM
+(SELECT DISTINCT SELL_PRODUCT.TEMP_INVOICE_NO,
+SUBSTRING(SELL_PRODUCT.TEMP_INVOICE_DATE,5,2) AS PMONTH,
+SUBSTRING(SELL_PRODUCT.TEMP_INVOICE_DATE,1,4)+543 AS PYEAR,
+--SUBSTRING(SELL_PRODUCT.TEMP_INVOICE_DATE)+543,1,4),
+CUSTOMER.CUST_ID, CUSTOMER.CUST_NAME, CUSTOMER.ADDRESS1, CUSTOMER.ADDRESS2,SELL_PRODUCT.TOTAL_BILL_AMOUNT
+FROM SELL_PRODUCT LEFT OUTER JOIN CUSTOMER ON SELL_PRODUCT.CUST_ID = CUSTOMER.CUST_ID
+WHERE SELL_PRODUCT.CUST_ID LIKE $P{cust_id} AND SELL_PRODUCT.EMP_ID LIKE $P{emp_id}
+AND SELL_PRODUCT.INVOICE_TYPE LIKE '%'
+AND TEMP_INVOICE_DATE BETWEEN $P{start_date} AND $P{end_date}) AS A
+GROUP BY CONVERT(VARCHAR(2),PMONTH)+'/'+SUBSTRING(CONVERT(VARCHAR(4),PYEAR),3,2), CUST_ID, CUST_NAME, ADDRESS1, ADDRESS2]]>
+	</queryString>
+	<field name="TERM" class="java.lang.String"/>
+	<field name="CUST_ID" class="java.lang.String"/>
+	<field name="CUST_NAME" class="java.lang.String"/>
+	<field name="ADDRESS1" class="java.lang.String"/>
+	<field name="ADDRESS2" class="java.lang.String"/>
+	<field name="COUNT_BILL" class="java.lang.Integer"/>
+	<field name="MONEY" class="java.lang.String"/>
+	<field name="TOTAL_AMOUNT" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="306" splitType="Stretch">
+			<textField>
+				<reportElement x="36" y="225" width="441" height="20" uuid="e8acd1ce-9d67-4366-a5da-1f8af7518368"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["-"+$P{scriptlet2_SCRIPTLET}.toThaiMoney($F{MONEY})+"-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="191" width="118" height="22" uuid="c847b1f6-cb4c-434e-9f89-78bf0a840c52"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNT_BILL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="361" y="191" width="129" height="22" uuid="6aa193e0-aa92-4f60-af55-297aa8480c4b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="18" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="410" y="132" width="88" height="20" uuid="8ba6420d-0778-4ade-8ea4-509d726d69b9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="112" width="225" height="20" uuid="a5c02777-56b9-47dc-84cc-cb45ef1f137b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUST_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="126" width="225" height="20" uuid="8ee9be3a-6476-428c-9b32-8ff619801cca"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUST_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="36" y="85" width="262" height="20" uuid="7c3a25ff-6dcc-4916-89f5-fac4032ed7ee"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="145" width="225" height="20" uuid="2e95e267-b0b0-4062-8ac2-477a860f585f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="163" width="225" height="20" uuid="d72fe1e3-d540-438e-a825-3907fd904217"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="14" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="467" y="82" width="72" height="20" uuid="5ffbcba6-7698-4fc2-92a2-07ad69d5d2ca"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TERM}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
