@@ -7,5 +7,6 @@ public class Test {
 	public static void main(String[] arg){
 		BuyProductDAO bpd = new BuyProductDAO();
 		bpd.setNewCostPrice("SC4670");
+		System.out.println("");
 	}
 }
